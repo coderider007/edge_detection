@@ -15,7 +15,7 @@ Plugin to detect edges of objects
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'WeScan'
+  s.dependency 'WeScanBatch'
 
   s.ios.deployment_target = '10.0'
 end
