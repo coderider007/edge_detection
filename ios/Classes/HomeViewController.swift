@@ -1,4 +1,4 @@
-import WeScan
+import WeScanBatch
 import Flutter
 import Foundation
 
@@ -9,11 +9,12 @@ class HomeViewController: UIViewController, ImageScannerControllerDelegate {
     override func viewDidAppear(_ animated: Bool) {       
 
         if self.isBeingPresented {
-            let scannerVC = ImageScannerController()
+            let scannerObjects = ImageScannerOptions()
+            let scannerVC = ImageScannerController(options: scannerObjects)
             scannerVC.imageScannerDelegate = self
             present(scannerVC, animated: true, completion: nil)
         }  
-    }    
+    }
 
     func imageScannerController(_ scanner: ImageScannerController, didFailWithError error: Error) {
         print(error)
@@ -21,61 +22,69 @@ class HomeViewController: UIViewController, ImageScannerControllerDelegate {
         self.dismiss(animated: true)
     }    
 
-    func imageScannerController(_ scanner: ImageScannerController, didFinishScanningWithResults results: ImageScannerResults) {
+    func imageScannerController(_ scanner: ImageScannerController, didFinishWithSession results: MultiPageScanSession) {
         // Your ViewController is responsible for dismissing the ImageScannerController
         scanner.dismiss(animated: true)
         
-
-        let imagePath = saveImage(image:results.scannedImage)
-     _result!(imagePath)
-       self.dismiss(animated: true)   
-    }
-    
+        var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        path = path + "/file.pdf"
+        
+        let fileData = NSData(contentsOfFile: path)
+        let pdfString:String = fileData!.base64EncodedString(options: .endLineWithLineFeed)
+        
+        _result!(pdfString)
+        self.dismiss(animated: true)
+        //let imagePath = saveImage(image:results.scannedImage)
+        // _result!(imagePath)
+          // self.dismiss(animated: true)
+        }
+        
 
         func imageScannerControllerDidCancel(_ scanner: ImageScannerController) {
         // Your ViewController is responsible for dismissing the ImageScannerController
+        
         scanner.dismiss(animated: true)
          _result!(nil)
         self.dismiss(animated: true)
     }
     
 
-    func saveImage(image: UIImage) -> String? {
-        guard let data = image.jpegData(compressionQuality: 1) ?? image.pngData() else {
-            return nil
-        }
-        
-        guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
-            return nil
-        }
-        var fileName = randomString(length:10);
-        let filePath: URL = directory.appendingPathComponent(fileName + ".png")!
-        
-
-        do {
-            let fileManager = FileManager.default            
-
-            // Check if file exists
-            if fileManager.fileExists(atPath: filePath.path) {
-                // Delete file
-                try fileManager.removeItem(atPath: filePath.path)
-            } else {
-                print("File does not exist")
-            }            
-
-        }
-        catch let error as NSError {
-            print("An error took place: \(error)")
-        }        
-
-        do {
-            try data.write(to: filePath)
-            return filePath.path
-        } catch {
-            print(error.localizedDescription)
-            return nil
-        }
-    }
+//    func saveImage(image: UIImage) -> String? {
+//        guard let data = image.UIImageJPEGRepresentation(compressionQuality: 1) ?? image.pngData() else {
+//            return nil
+//        }
+//
+//        guard let directory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) as NSURL else {
+//            return nil
+//        }
+//        var fileName = randomString(length:10);
+//        let filePath: URL = directory.appendingPathComponent(fileName + ".png")!
+//
+//
+//        do {
+//            let fileManager = FileManager.default
+//
+//            // Check if file exists
+//            if fileManager.fileExists(atPath: filePath.path) {
+//                // Delete file
+//                try fileManager.removeItem(atPath: filePath.path)
+//            } else {
+//                print("File does not exist")
+//            }
+//
+//        }
+//        catch let error as NSError {
+//            print("An error took place: \(error)")
+//        }
+//
+//        do {
+//            try data.write(to: filePath)
+//            return filePath.path
+//        } catch {
+//            print(error.localizedDescription)
+//            return nil
+//        }
+//    }
     
 
     func randomString(length: Int) -> String {

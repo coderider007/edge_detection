@@ -14,4 +14,9 @@ class EdgeDetection {
     final String version = await _channel.invokeMethod('edge_detect');
     return version;
   }
+
+  static Future<String> get detectSig async {
+    final String version = await _channel.invokeMethod('sig_detect');
+    return version;
+  }
 }
