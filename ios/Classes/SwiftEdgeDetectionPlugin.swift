@@ -14,11 +14,20 @@ public class SwiftEdgeDetectionPlugin: NSObject, FlutterPlugin, UIApplicationDel
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    
-    if let viewController = UIApplication.shared.delegate?.window??.rootViewController as? FlutterViewController {
-        let destinationViewController = HomeViewController()
-        destinationViewController._result = result
-        viewController.present(destinationViewController,animated: true,completion: nil);
+    print(call.method)
+    if call.method == "sig_detect" {
+        if let viewController = UIApplication.shared.delegate?.window??.rootViewController as? FlutterViewController {
+            let destinationViewController = SingleViewController()
+            destinationViewController._result = result
+            viewController.present(destinationViewController,animated: true,completion: nil);
+        }
+    }
+    else {
+        if let viewController = UIApplication.shared.delegate?.window??.rootViewController as? FlutterViewController {
+            let destinationViewController = HomeViewController()
+            destinationViewController._result = result
+            viewController.present(destinationViewController,animated: true,completion: nil);
+        }
     }
   }
 }
