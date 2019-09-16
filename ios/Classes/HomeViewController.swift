@@ -29,10 +29,11 @@ class HomeViewController: UIViewController, ImageScannerControllerDelegate {
         var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
         path = path + "/file.pdf"
         
-        let fileData = NSData(contentsOfFile: path)
-        let pdfString:String = fileData!.base64EncodedString(options: .endLineWithLineFeed)
+        // let fileData = NSData(contentsOfFile: path)
+        // let pdfString:String = fileData!.base64EncodedString(options: .endLineWithLineFeed)
         
-        _result!(pdfString)
+        // _result!(pdfString)
+         _result!(path)
         self.dismiss(animated: true)
         //let imagePath = saveImage(image:results.scannedImage)
         // _result!(imagePath)
