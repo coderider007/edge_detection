@@ -26,14 +26,24 @@ class HomeViewController: UIViewController, ImageScannerControllerDelegate {
         // Your ViewController is responsible for dismissing the ImageScannerController
         scanner.dismiss(animated: true)
         
+        
         var path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] as String
+        let newPath = path + "/" + randomString(length: 10) + ".pdf"
         path = path + "/file.pdf"
         
+        let fileManager = FileManager.default
+        do {
+            try fileManager.moveItem(atPath: path, toPath: newPath)
+        }
+        catch let error as NSError {
+            print("Ooops! Something went wrong: \(error)")
+        }
+        // so now we want to rename the new file to a random string
         // let fileData = NSData(contentsOfFile: path)
         // let pdfString:String = fileData!.base64EncodedString(options: .endLineWithLineFeed)
         
         // _result!(pdfString)
-         _result!(path)
+         _result!(newPath)
         self.dismiss(animated: true)
         //let imagePath = saveImage(image:results.scannedImage)
         // _result!(imagePath)
